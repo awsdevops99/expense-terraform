@@ -17,3 +17,11 @@ default_route_table_id = "rtb-0eb2513425872b286"
 account_id = "831926604528"
 default_vpc_cidr = "172.31.0.0/16"
 azs = ["us-east-1a", "us-east-1b"]
+
+allocated_storage = 20
+engine = "mysql"
+engine_version = "8.0"
+instance_class = "db.t3.micro"
+
+
+

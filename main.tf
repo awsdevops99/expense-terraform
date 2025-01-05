@@ -1,6 +1,6 @@
 module "vpc" {
     source = "./modules/vpc"
-    
+
     env = var.env
     tags = var.tags
     vpc_cidr_block =  var.vpc_cidr_block
@@ -14,6 +14,23 @@ module "vpc" {
     account_id = var.account_id
     azs= var.azs
 
+
+}
+
+module "vpc" {
+    source = "./modules/rds"
+
+    subnets = module.vpc.db_subnets
+    env = var.env
+    tags = var.tags
+    rds_allocated_storage = var.rds_allocated_storage
+    rds_engine = var.rds_engine
+    rds_engine_version = var.rds_engine_version
+    rds_instance_class = var.rds_instance_class
+    sg_cidr = var.app_subnets
+    vpc_id = module.vpc.vpc_id
+
+    
 
 }
 
