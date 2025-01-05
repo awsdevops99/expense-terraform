@@ -40,3 +40,18 @@ frontend = {
 
 
 
+public_alb = {
+    internal = false
+    type = "public"
+    lb_port = 80
+    component = "frontend"
+}
+
+backend_alb = {
+        lb_port = 80
+        internal = false
+        type = "backend"
+        component = "backend"
+    }
+
+bastion_cidrs = [""]    

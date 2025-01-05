@@ -7,3 +7,4 @@ variable "vpc_id" {}
 variable "app_port" {}
 variable "sg_cidr" {}
 variable "subnets" {}
+variable "bastion_cidrs" {}

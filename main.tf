@@ -44,8 +44,9 @@ module "app" {
     component = "backend"
     instance_count = var.backend["instance_count"]
     instance_type = var.backend["instance_type"]
-    sg_cidr = var.web_subnets
+    sg_cidr = var.app_subnets
     subnets = module.vpc.app_subnets
+    bastion_cidrs = var.bastion_cidrs
 }
 
 module "frontend" {
@@ -58,11 +59,44 @@ module "frontend" {
     component = "frontend"
     instance_count = var.frontend["instance_count"]
     instance_type = var.frontend["instance_type"]
-    sg_cidr = var.web_subnets
+    sg_cidr = var.public_subnets
     subnets = module.vpc.app_subnets
-    
+    bastion_cidrs = var.bastion_cidrs
+
 }
 
+module "public-alb" {
+    source = "./modules/alb"
+   
+    lb_port = var.public_alb["lb_port"]
+    sg_cidr = ["0.0.0.0/0"]
+    target_group_arn = module.frontend.target_group_arn
+    vpc_id = module.vpc.vpc_id
+    tags = var.tags
+    env =  var.env
+    subnets = module.vpc.public_subnets
+    internal = var.public_alb["internal"]
+    type = var.public_alb["type"]
+    component = var.public_alb["component"]
+
+    }
+
+    module "backend-alb" {
+    source = "./modules/alb"
+
+    lb_port = var.backend_alb["alb"]
+    sg_cidr = ["0.0.0.0/0"]
+    target_group_arn = module.backend.target_group_arn
+    vpc_id = module.vpc.vpc_id
+    tags = var.tags
+    env =  var.env
+    subnets = module.vpc.public_subnets
+    internal = var.backend_alb["internal"]
+    type = var.backend_alb["type"]
+    component = var.backend_alb["component"]
+
+    }
 
 
+ 
 

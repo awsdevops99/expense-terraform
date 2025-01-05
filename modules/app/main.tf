@@ -39,33 +39,44 @@ resource "aws_launch_template" "main" {
   } 
 }
 
-resource "aws_autoscaling_group" "bar" {
+resource "aws_autoscaling_group" "main" {
   availability_zones = ["us-east-1a"]
   desired_capacity   = var.instance_count
   max_size           = var.instance_count + 5
   min_size           = var.instance_count
-
-  launch_template {
-    id      = aws_launch_template.main.id
-    version = "$Latest"
-  }
-
- 
-
-  
-}
-resource "aws_autoscaling_group" "bar" {
-  name                      = "${var.env}"-"${var.component}"
-  max_size                  = var.instance_count
-  min_size                  = var.instance_count
   vpc_zone_identifier       = var.subnets
-  tag {
+  target_group_arns = aws_lb_target_group.main.arn
+
+    tag {
 
     key = "name"
     value = "${var.env}"-"${var.component}"
     propagate_at_launch = true
   }
+
+  launch_template {
+    id      = aws_launch_template.main.id
+    version = "$Latest"
+  }
+  
 }
+
+resource "aws_lb_target_group" "main" {
+  name     = "${var.env}"-"${var.component}"
+  port     = var.app_port
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
+
+  health_check  {
+     enabled = true
+     healthy_threshold = 2
+     unhealthy_threshold = 2
+     interval = 5
+     matcher = 200
+     path = "/health"
+     timeout = 4
+  }
+  }
 
 
 resource "aws_iam_role" "test_role" {
