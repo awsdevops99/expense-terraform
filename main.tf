@@ -34,3 +34,35 @@ module "vpc" {
 
 }
 
+module "app" {
+    source = "./modules/app"
+
+    env = var.env
+    tags = var.tags
+    vpc_id = module.vpc.vpc_id
+    app_port = var.backend["app_port"]
+    component = "backend"
+    instance_count = var.backend["instance_count"]
+    instance_type = var.backend["instance_type"]
+    sg_cidr = var.web_subnets
+    subnets = module.vpc.app_subnets
+}
+
+module "frontend" {
+    source = "./modules/app"
+
+    env = var.env
+    tags = var.tags
+    vpc_id = module.vpc.vpc_id
+    app_port = var.frontend["app_port"]
+    component = "frontend"
+    instance_count = var.frontend["instance_count"]
+    instance_type = var.frontend["instance_type"]
+    sg_cidr = var.web_subnets
+    subnets = module.vpc.app_subnets
+    
+}
+
+
+
+
