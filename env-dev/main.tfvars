@@ -54,4 +54,4 @@ backend_alb = {
         component = "backend"
     }
 
-bastion_cidrs = [""]    
+bastion_cidrs = ["172.31.83.102"]    
