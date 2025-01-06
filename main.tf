@@ -81,7 +81,7 @@ module "public-alb" {
 
     }
 
-    module "backend-alb" {
+    module "backend" {
     source = "./modules/alb"
 
     lb_port = var.backend_alb["alb"]
